@@ -3,19 +3,22 @@ import { IAuthenticateUseCase } from '../../interfaces/usecases/authenticate-use
 import { AuthenticateUseCase } from './authenticate-usecase'
 import { UserEntity } from '../entities/user-entity'
 import { IHashCompare } from '../../interfaces/criptography/hash-compare-interface'
+import { ITokenGenerator } from '../../interfaces/token/token-generator-interface'
 
 interface ISut {
   sut: IAuthenticateUseCase
   getUserByEmailRepositoryStub: IGetUserByEmailRepository
   hashCompareStub: IHashCompare
+  tokenGeneratorStub: ITokenGenerator
 }
 
 const makeSut = (): ISut => {
   const getUserByEmailRepositoryStub = makeGetUserByEmailRepositoryStub()
   const hashCompareStub = makeHashCompareStub()
-  const sut = new AuthenticateUseCase(getUserByEmailRepositoryStub, hashCompareStub)
+  const tokenGeneratorStub = makeTokenGeneratorStub()
+  const sut = new AuthenticateUseCase(getUserByEmailRepositoryStub, hashCompareStub, tokenGeneratorStub)
 
-  return { sut, getUserByEmailRepositoryStub, hashCompareStub }
+  return { sut, getUserByEmailRepositoryStub, hashCompareStub, tokenGeneratorStub }
 }
 
 const makeGetUserByEmailRepositoryStub = (): IGetUserByEmailRepository => {
@@ -35,11 +38,20 @@ const makeGetUserByEmailRepositoryStub = (): IGetUserByEmailRepository => {
 
 const makeHashCompareStub = (): IHashCompare => {
   class HashCompare implements IHashCompare {
-    async execute (value: string, hash: string): Promise<boolean> {
+    async compare (value: string, hash: string): Promise<boolean> {
       return await new Promise(resolve => resolve(true))
     }
   }
   return new HashCompare()
+}
+
+const makeTokenGeneratorStub = (): ITokenGenerator => {
+  class TokenGeneratorStub implements ITokenGenerator {
+    async execute (value: any): Promise<string> {
+      return await new Promise(resolve => resolve('anyToken'))
+    }
+  }
+  return new TokenGeneratorStub()
 }
 
 describe('AuthenticateUseCase', () => {
@@ -61,7 +73,7 @@ describe('AuthenticateUseCase', () => {
 
   test('should call HashCompare with correct values', async () => {
     const { sut, hashCompareStub } = makeSut()
-    const hashCompareSpy = jest.spyOn(hashCompareStub, 'execute')
+    const hashCompareSpy = jest.spyOn(hashCompareStub, 'compare')
 
     await sut.execute('anyEmail@email.com.br', 'anyPassword')
     expect(hashCompareSpy).toHaveBeenCalledWith('anyPassword', 'hashedPassword')
@@ -69,9 +81,17 @@ describe('AuthenticateUseCase', () => {
 
   test('should return null if HashCompare return false', async () => {
     const { sut, hashCompareStub } = makeSut()
-    jest.spyOn(hashCompareStub, 'execute').mockReturnValueOnce(new Promise(resolve => resolve(false)))
+    jest.spyOn(hashCompareStub, 'compare').mockReturnValueOnce(new Promise(resolve => resolve(false)))
 
     const httpResponse = await sut.execute('anyEmail@email.com.br', 'anyPassword')
     expect(httpResponse).toBe(null)
+  })
+
+  test('should call tokenGenerator with correct id', async () => {
+    const { sut, tokenGeneratorStub } = makeSut()
+    const tokenGeneratorSpy = jest.spyOn(tokenGeneratorStub, 'execute')
+
+    await sut.execute('anyEmail@email.com.br', 'anyPassword')
+    expect(tokenGeneratorSpy).toHaveBeenCalledWith('3552ba6f-00c4-42e1-82e8-e7646a67fc39')
   })
 })
