@@ -29,4 +29,16 @@ describe('AuthenticateController', () => {
       body: new MissingParamError('email')
     })
   })
+
+  test('should return 400 if password is not provided', async () => {
+    const { sut } = makeSut()
+    const httpRequest = makeHttpRequest()
+    httpRequest.body.password = null
+
+    const httpResponse = await sut.execute(httpRequest)
+    expect(httpResponse).toEqual({
+      statusCode: 400,
+      body: new MissingParamError('password')
+    })
+  })
 })

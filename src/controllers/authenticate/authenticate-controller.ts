@@ -5,7 +5,7 @@ import { badRequest } from '../../shared/helpers/http-helper'
 
 export class AuthenticateController implements Controller {
   async execute (httpRequest: HttpRequest): Promise<HttpResponse> {
-    const requiredFields = ['email']
+    const requiredFields = ['email', 'password']
     for (const field of requiredFields) {
       if (!httpRequest.body[field]) {
         return badRequest(new MissingParamError(field))
