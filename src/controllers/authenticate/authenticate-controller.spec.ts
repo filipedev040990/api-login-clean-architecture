@@ -3,16 +3,19 @@ import { AuthenticateController } from './authenticate-controller'
 import { MissingParamError } from '../../shared/errors/missing-param-error'
 import { InvalidParamError } from '../../shared/errors/invalid-param-error'
 import { EmailValidator } from '../../interfaces/email-validator'
-import { serverError } from '../../shared/helpers/http-helper'
+import { serverError, unauthorized } from '../../shared/helpers/http-helper'
+import { AuthenticateUseCase } from '../../interfaces/usecases/authenticate-usecase-interface'
 
 interface SutTypes {
   sut: AuthenticateController
   emailValidatorStub: EmailValidator
+  authenticateUseCaseStub: AuthenticateUseCase
 }
 const makeSut = (): SutTypes => {
   const emailValidatorStub = makeEmailValidatorStub()
-  const sut = new AuthenticateController(emailValidatorStub)
-  return { sut, emailValidatorStub }
+  const authenticateUseCaseStub = makeAuthenticateUseCaseStub()
+  const sut = new AuthenticateController(emailValidatorStub, authenticateUseCaseStub)
+  return { sut, emailValidatorStub, authenticateUseCaseStub }
 }
 
 const makeEmailValidatorStub = (): EmailValidator => {
@@ -22,6 +25,15 @@ const makeEmailValidatorStub = (): EmailValidator => {
     }
   }
   return new EmailValidatorStub()
+}
+
+const makeAuthenticateUseCaseStub = (): AuthenticateUseCase => {
+  class AuthenticateUseCaseStub implements AuthenticateUseCase {
+    async execute (email: string, password: string): Promise<string> {
+      return await new Promise(resolve => resolve('anyToken'))
+    }
+  }
+  return new AuthenticateUseCaseStub()
 }
 
 const makeHttpRequest = (): HttpRequest => ({
@@ -87,5 +99,15 @@ describe('AuthenticateController', () => {
 
     const httpResponse = await sut.execute(httpRequest)
     expect(httpResponse).toEqual(serverError())
+  })
+
+  test('should return 401 if email or password not exists in database', async () => {
+    const { sut, authenticateUseCaseStub } = makeSut()
+    const httpRequest = makeHttpRequest()
+
+    jest.spyOn(authenticateUseCaseStub, 'execute').mockReturnValueOnce(null)
+
+    const httpResponse = await sut.execute(httpRequest)
+    expect(httpResponse).toEqual(unauthorized())
   })
 })
