@@ -4,7 +4,7 @@ import { HttpRequest, HttpResponse } from '../../interfaces/http-interface'
 import { AuthenticateUseCase } from '../../interfaces/usecases/authenticate-usecase-interface'
 import { InvalidParamError } from '../../shared/errors/invalid-param-error'
 import { MissingParamError } from '../../shared/errors/missing-param-error'
-import { badRequest, serverError, unauthorized } from '../../shared/helpers/http-helper'
+import { badRequest, serverError, success, unauthorized } from '../../shared/helpers/http-helper'
 
 export class AuthenticateController implements Controller {
   constructor (
@@ -31,8 +31,7 @@ export class AuthenticateController implements Controller {
       if (!accessToken) {
         return unauthorized()
       }
-
-      return await new Promise(resolve => resolve(null))
+      return success({ accessToken })
     } catch (error) {
       return serverError()
     }

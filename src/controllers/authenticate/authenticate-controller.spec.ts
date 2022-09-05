@@ -110,4 +110,17 @@ describe('AuthenticateController', () => {
     const httpResponse = await sut.execute(httpRequest)
     expect(httpResponse).toEqual(unauthorized())
   })
+
+  test('should return an accessToken if it authenticates successfully', async () => {
+    const { sut } = makeSut()
+    const httpRequest = makeHttpRequest()
+
+    const httpResponse = await sut.execute(httpRequest)
+    expect(httpResponse).toEqual({
+      statusCode: 200,
+      body: {
+        accessToken: 'anyToken'
+      }
+    })
+  })
 })
