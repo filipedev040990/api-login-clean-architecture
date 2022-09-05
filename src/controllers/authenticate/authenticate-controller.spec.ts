@@ -25,7 +25,7 @@ const makeEmailValidatorStub = (): EmailValidator => {
 
 const makeHttpRequest = (): HttpRequest => ({
   body: {
-    email: 'anyLogin',
+    email: 'anyEmail@email.com',
     password: 'anyPassword'
   }
 })
@@ -66,5 +66,15 @@ describe('AuthenticateController', () => {
       statusCode: 400,
       body: new InvalidParamError('email')
     })
+  })
+
+  test('should call EmailValidator with correct email', async () => {
+    const { sut, emailValidatorStub } = makeSut()
+    const httpRequest = makeHttpRequest()
+
+    const isValidSpy = jest.spyOn(emailValidatorStub, 'isValid')
+
+    await sut.execute(httpRequest)
+    expect(isValidSpy).toHaveBeenCalledWith('anyEmail@email.com')
   })
 })
