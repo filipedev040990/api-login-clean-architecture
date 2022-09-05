@@ -1,7 +1,8 @@
 # LOGIN CLEAN ARCHITECTURE
 API simples de login para aplicação dos conceitos de arquitetura limpa.
 
-## Para testar, basta clonar o projeto e instalar as dependências e em seguida utilizar enviar um POST para a rota localhost:3000/api/authenticate
+## Testando a API
+Para testar, basta clonar o projeto e instalar as dependências e em seguida utilizar enviar um POST para a rota localhost:3000/api/authenticate
 
 `{
 	"email": "teste@email.com",
