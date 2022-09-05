@@ -20,6 +20,11 @@ export class AuthenticateUseCase implements IAuthenticateUseCase {
     if (!isValidPassword) {
       return null
     }
-    await this.tokenGenerator.execute(user.id)
+
+    const accessToken = await this.tokenGenerator.execute(user.id)
+    if (!accessToken) {
+      return null
+    }
+    return accessToken
   }
 }
