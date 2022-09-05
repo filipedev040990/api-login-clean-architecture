@@ -66,4 +66,12 @@ describe('AuthenticateUseCase', () => {
     await sut.execute('anyEmail@email.com.br', 'anyPassword')
     expect(hashCompareSpy).toHaveBeenCalledWith('anyPassword', 'hashedPassword')
   })
+
+  test('should return null if HashCompare return false', async () => {
+    const { sut, hashCompareStub } = makeSut()
+    jest.spyOn(hashCompareStub, 'execute').mockReturnValueOnce(new Promise(resolve => resolve(false)))
+
+    const httpResponse = await sut.execute('anyEmail@email.com.br', 'anyPassword')
+    expect(httpResponse).toBe(null)
+  })
 })

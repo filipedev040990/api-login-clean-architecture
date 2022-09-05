@@ -14,6 +14,9 @@ export class AuthenticateUseCase implements IAuthenticateUseCase {
       return null
     }
 
-    await this.hashCompare.execute(password, user.password)
+    const isValidPassword = await this.hashCompare.execute(password, user.password)
+    if (!isValidPassword) {
+      return null
+    }
   }
 }
