@@ -85,4 +85,11 @@ describe('AuthenticateUseCase', () => {
     const httpResponse = await sut.execute('anyEmail@email.com', 'anyPassword')
     expect(httpResponse).toBe('anyToken')
   })
+
+  test('should return null if TokenGenerator return null', async () => {
+    const { sut, tokenGeneratorStub } = makeSut()
+    jest.spyOn(tokenGeneratorStub, 'execute').mockReturnValueOnce(null)
+    const httpResponse = await sut.execute('anyEmail@email.com', 'anyPassword')
+    expect(httpResponse).toBe(null)
+  })
 })
