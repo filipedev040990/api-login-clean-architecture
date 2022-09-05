@@ -3,6 +3,7 @@ import { AuthenticateController } from './authenticate-controller'
 import { MissingParamError } from '../../shared/errors/missing-param-error'
 import { InvalidParamError } from '../../shared/errors/invalid-param-error'
 import { EmailValidator } from '../../interfaces/email-validator'
+import { serverError } from '../../shared/helpers/http-helper'
 
 interface SutTypes {
   sut: AuthenticateController
@@ -76,5 +77,15 @@ describe('AuthenticateController', () => {
 
     await sut.execute(httpRequest)
     expect(isValidSpy).toHaveBeenCalledWith('anyEmail@email.com')
+  })
+
+  test('should throw exception if EmailValidator throw exception', async () => {
+    const { sut, emailValidatorStub } = makeSut()
+    const httpRequest = makeHttpRequest()
+
+    jest.spyOn(emailValidatorStub, 'isValid').mockImplementationOnce(async () => { throw new Error() })
+
+    const httpResponse = await sut.execute(httpRequest)
+    expect(httpResponse).toEqual(serverError())
   })
 })
