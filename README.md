@@ -2,7 +2,8 @@
 API simples de login para aplicação dos conceitos de arquitetura limpa.
 
 ## Testando a API
-Para testar, basta clonar o projeto e instalar as dependências e em seguida utilizar enviar um POST para a rota localhost:3000/api/authenticate
+Para testar, basta clonar o projeto e instalar as dependências e em seguida utilizar a rota localhost:3000/api/authenticate
+### Método: POST
 
 `{
 	"email": "teste@email.com",
