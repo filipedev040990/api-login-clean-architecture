@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken'
 import { TokenGeneratorAdapter } from './token-generator-adapter'
+import config from '../../infra/config'
 
 jest.mock('jsonwebtoken', () => ({
   async sign (): Promise<string> {
@@ -7,8 +8,8 @@ jest.mock('jsonwebtoken', () => ({
   }
 }))
 
-const secretKey = '3299eb7b61176d4c651dc523969d1993'
-const expiresIn = '1h'
+const secretKey = config.jwt.secretKey
+const expiresIn = config.jwt.expiresIn
 
 const makeSut = (): TokenGeneratorAdapter => {
   return new TokenGeneratorAdapter(secretKey, expiresIn)
