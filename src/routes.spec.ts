@@ -3,7 +3,7 @@ import { app } from './app'
 
 describe('Authenticate Routes', () => {
   describe('POST /authenticate', () => {
-    test('should return 200 on authenticate', async () => {
+    test('should return 200 when request authenticate on success', async () => {
       await request(app)
         .post('/api/authenticate')
         .send({
