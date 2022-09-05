@@ -1,9 +1,5 @@
-import { Controller } from '../../interfaces/controller-interface'
-import { IEmailValidator } from '../../interfaces/email-validator'
-import { HttpRequest, HttpResponse } from '../../interfaces/http-interface'
-import { IAuthenticateUseCase } from '../../interfaces/usecases/authenticate-usecase-interface'
-import { InvalidParamError } from '../../shared/errors/invalid-param-error'
-import { MissingParamError } from '../../shared/errors/missing-param-error'
+import { Controller, IEmailValidator, HttpRequest, HttpResponse, IAuthenticateUseCase } from '../../interfaces'
+import { InvalidParamError, MissingParamError } from '../../shared/errors'
 import { badRequest, serverError, success, unauthorized } from '../../shared/helpers/http-helper'
 
 export class AuthenticateController implements Controller {

@@ -1,10 +1,6 @@
-import { HttpRequest } from '../../interfaces/http-interface'
+import { HttpRequest, IEmailValidator, IAuthenticateUseCase } from '../../interfaces/'
 import { AuthenticateController } from './authenticate-controller'
-import { MissingParamError } from '../../shared/errors/missing-param-error'
-import { InvalidParamError } from '../../shared/errors/invalid-param-error'
-import { IEmailValidator } from '../../interfaces/email-validator'
 import { serverError, unauthorized } from '../../shared/helpers/http-helper'
-import { IAuthenticateUseCase } from '../../interfaces/usecases/authenticate-usecase-interface'
 
 interface SutTypes {
   sut: AuthenticateController
@@ -52,7 +48,7 @@ describe('AuthenticateController', () => {
     const httpResponse = await sut.execute(httpRequest)
     expect(httpResponse).toEqual({
       statusCode: 400,
-      body: new MissingParamError('email')
+      body: 'Missing param : email'
     })
   })
 
@@ -64,7 +60,7 @@ describe('AuthenticateController', () => {
     const httpResponse = await sut.execute(httpRequest)
     expect(httpResponse).toEqual({
       statusCode: 400,
-      body: new MissingParamError('password')
+      body: 'Missing param : password'
     })
   })
 
@@ -77,7 +73,7 @@ describe('AuthenticateController', () => {
     const httpResponse = await sut.execute(httpRequest)
     expect(httpResponse).toEqual({
       statusCode: 400,
-      body: new InvalidParamError('email')
+      body: 'Invalid param : email'
     })
   })
 

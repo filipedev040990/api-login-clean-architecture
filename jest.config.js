@@ -4,7 +4,6 @@ module.exports = {
     '<rootDir>/src/**/*.ts',
     '!<rootDir>/src/**/*interface.ts',
     '!<rootDir>/src/**/*helper.ts',
-    '!**/interfaces/**',
     '!<rootDir>/src/app.ts',
     '!<rootDir>/src/server.ts'
 
