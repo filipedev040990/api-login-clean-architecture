@@ -1,7 +1,7 @@
 import { Controller } from '../../interfaces/controller-interface'
 import { EmailValidator } from '../../interfaces/email-validator'
 import { HttpRequest, HttpResponse } from '../../interfaces/http-interface'
-import { AuthenticateUseCase } from '../../interfaces/usecases/authenticate-usecase-interface'
+import { IAuthenticateUseCase } from '../../interfaces/usecases/authenticate-usecase-interface'
 import { InvalidParamError } from '../../shared/errors/invalid-param-error'
 import { MissingParamError } from '../../shared/errors/missing-param-error'
 import { badRequest, serverError, success, unauthorized } from '../../shared/helpers/http-helper'
@@ -9,7 +9,7 @@ import { badRequest, serverError, success, unauthorized } from '../../shared/hel
 export class AuthenticateController implements Controller {
   constructor (
     private readonly emailValidator: EmailValidator,
-    private readonly authenticateUseCase: AuthenticateUseCase
+    private readonly authenticateUseCase: IAuthenticateUseCase
   ) {}
 
   async execute (httpRequest: HttpRequest): Promise<HttpResponse> {

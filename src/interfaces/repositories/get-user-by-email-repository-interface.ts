@@ -1,5 +1,5 @@
 import { UserEntity } from '../../core/entities/user-entity'
 
-export interface GetUserByEmailRepository {
+export interface IGetUserByEmailRepository {
   execute(email: string): Promise<UserEntity>
 }

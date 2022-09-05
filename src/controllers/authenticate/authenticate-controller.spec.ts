@@ -4,12 +4,12 @@ import { MissingParamError } from '../../shared/errors/missing-param-error'
 import { InvalidParamError } from '../../shared/errors/invalid-param-error'
 import { EmailValidator } from '../../interfaces/email-validator'
 import { serverError, unauthorized } from '../../shared/helpers/http-helper'
-import { AuthenticateUseCase } from '../../interfaces/usecases/authenticate-usecase-interface'
+import { IAuthenticateUseCase } from '../../interfaces/usecases/authenticate-usecase-interface'
 
 interface SutTypes {
   sut: AuthenticateController
   emailValidatorStub: EmailValidator
-  authenticateUseCaseStub: AuthenticateUseCase
+  authenticateUseCaseStub: IAuthenticateUseCase
 }
 const makeSut = (): SutTypes => {
   const emailValidatorStub = makeEmailValidatorStub()
@@ -27,8 +27,8 @@ const makeEmailValidatorStub = (): EmailValidator => {
   return new EmailValidatorStub()
 }
 
-const makeAuthenticateUseCaseStub = (): AuthenticateUseCase => {
-  class AuthenticateUseCaseStub implements AuthenticateUseCase {
+const makeAuthenticateUseCaseStub = (): IAuthenticateUseCase => {
+  class AuthenticateUseCaseStub implements IAuthenticateUseCase {
     async execute (email: string, password: string): Promise<string> {
       return await new Promise(resolve => resolve('anyToken'))
     }
