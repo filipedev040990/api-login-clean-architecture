@@ -3,7 +3,7 @@ import { IAuthenticateUseCase } from '../../interfaces/usecases/authenticate-use
 import { AuthenticateUseCase } from './authenticate-usecase'
 import { IHashCompare } from '../../interfaces/criptography/hash-compare-interface'
 import { ITokenGenerator } from '../../interfaces/token/token-generator-interface'
-import { GetUserByEmailRepository } from '../../infra/db/repositories/get-user-by-email-in-memory-repository'
+import { GetUserByEmailRepositoryInMemory } from '../../infra/db/repositories/get-user-by-email-in-memory-repository'
 
 interface ISut {
   sut: IAuthenticateUseCase
@@ -13,7 +13,7 @@ interface ISut {
 }
 
 const makeSut = (): ISut => {
-  const getUserByEmailRepositoryStub = new GetUserByEmailRepository()
+  const getUserByEmailRepositoryStub = new GetUserByEmailRepositoryInMemory()
   const hashCompareStub = makeHashCompareStub()
   const tokenGeneratorStub = makeTokenGeneratorStub()
   const sut = new AuthenticateUseCase(getUserByEmailRepositoryStub, hashCompareStub, tokenGeneratorStub)
@@ -60,8 +60,8 @@ describe('AuthenticateUseCase', () => {
     const { sut, hashCompareStub } = makeSut()
     const hashCompareSpy = jest.spyOn(hashCompareStub, 'compare')
 
-    await sut.execute('anyEmail@email.com', 'anyPassword')
-    expect(hashCompareSpy).toHaveBeenCalledWith('anyPassword', 'hashedPassword')
+    await sut.execute('teste@email.com', 'anyPassword')
+    expect(hashCompareSpy).toHaveBeenCalledWith('anyPassword', '$2a$12$EEUwZZtsfqwWg8dfNJRNAOq3DUpB0LKrmy8aBVgCLUC4xg5v8J36a')
   })
 
   test('should return null if HashCompare return false', async () => {
@@ -76,13 +76,13 @@ describe('AuthenticateUseCase', () => {
     const { sut, tokenGeneratorStub } = makeSut()
     const tokenGeneratorSpy = jest.spyOn(tokenGeneratorStub, 'execute')
 
-    await sut.execute('anyEmail@email.com', 'anyPassword')
+    await sut.execute('teste@email.com', 'anyPassword')
     expect(tokenGeneratorSpy).toHaveBeenCalledWith('3552ba6f-00c4-42e1-82e8-e7646a67fc39')
   })
 
   test('should return accessToken on success', async () => {
     const { sut } = makeSut()
-    const httpResponse = await sut.execute('anyEmail@email.com', 'anyPassword')
+    const httpResponse = await sut.execute('teste@email.com', 'anyPassword')
     expect(httpResponse).toBe('anyToken')
   })
 
