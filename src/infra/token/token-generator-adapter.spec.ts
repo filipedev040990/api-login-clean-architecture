@@ -23,4 +23,12 @@ describe('TokenGeneratorAdapter', () => {
     await sut.execute(id)
     expect(signSpy).toHaveBeenCalledWith({ id }, secretKey, { expiresIn })
   })
+
+  test('should return an token when sign on success', async () => {
+    const sut = makeSut()
+    const id = '3552ba6f-00c4-42e1-82e8-e7646a67fc39'
+
+    const token = await sut.execute(id)
+    expect(token).toBe('anyToken')
+  })
 })
