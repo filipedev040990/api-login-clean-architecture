@@ -1,5 +1,5 @@
 import { Controller } from '../../interfaces/controller-interface'
-import { EmailValidator } from '../../interfaces/email-validator'
+import { IEmailValidator } from '../../interfaces/email-validator'
 import { HttpRequest, HttpResponse } from '../../interfaces/http-interface'
 import { IAuthenticateUseCase } from '../../interfaces/usecases/authenticate-usecase-interface'
 import { InvalidParamError } from '../../shared/errors/invalid-param-error'
@@ -8,7 +8,7 @@ import { badRequest, serverError, success, unauthorized } from '../../shared/hel
 
 export class AuthenticateController implements Controller {
   constructor (
-    private readonly emailValidator: EmailValidator,
+    private readonly emailValidator: IEmailValidator,
     private readonly authenticateUseCase: IAuthenticateUseCase
   ) {}
 

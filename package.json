@@ -24,6 +24,7 @@
   },
   "homepage": "https://github.com/filipedev040990/template#readme",
   "devDependencies": {
+    "@types/bcrypt": "^5.0.0",
     "@types/jest": "^28.1.6",
     "@types/node": "^18.6.3",
     "@types/validator": "^13.7.6",
@@ -42,6 +43,7 @@
     "typescript": "^4.7.4"
   },
   "dependencies": {
+    "bcrypt": "^5.0.1",
     "validator": "^13.7.0"
   }
 }

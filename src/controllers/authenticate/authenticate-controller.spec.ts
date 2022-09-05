@@ -2,13 +2,13 @@ import { HttpRequest } from '../../interfaces/http-interface'
 import { AuthenticateController } from './authenticate-controller'
 import { MissingParamError } from '../../shared/errors/missing-param-error'
 import { InvalidParamError } from '../../shared/errors/invalid-param-error'
-import { EmailValidator } from '../../interfaces/email-validator'
+import { IEmailValidator } from '../../interfaces/email-validator'
 import { serverError, unauthorized } from '../../shared/helpers/http-helper'
 import { IAuthenticateUseCase } from '../../interfaces/usecases/authenticate-usecase-interface'
 
 interface SutTypes {
   sut: AuthenticateController
-  emailValidatorStub: EmailValidator
+  emailValidatorStub: IEmailValidator
   authenticateUseCaseStub: IAuthenticateUseCase
 }
 const makeSut = (): SutTypes => {
@@ -18,8 +18,8 @@ const makeSut = (): SutTypes => {
   return { sut, emailValidatorStub, authenticateUseCaseStub }
 }
 
-const makeEmailValidatorStub = (): EmailValidator => {
-  class EmailValidatorStub implements EmailValidator {
+const makeEmailValidatorStub = (): IEmailValidator => {
+  class EmailValidatorStub implements IEmailValidator {
     async isValid (email: string): Promise<boolean> {
       return await new Promise(resolve => resolve(true))
     }
