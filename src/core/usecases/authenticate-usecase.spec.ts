@@ -38,4 +38,12 @@ describe('AuthenticateUseCase', () => {
     await sut.execute('anyEmail@email.com.br', 'anyPassword')
     expect(repoSpy).toHaveBeenCalledWith('anyEmail@email.com.br')
   })
+
+  test('should return null if getUserByEmailRepository return null', async () => {
+    const { sut, getUserByEmailRepositoryStub } = makeSut()
+    jest.spyOn(getUserByEmailRepositoryStub, 'execute').mockReturnValueOnce(null)
+
+    const httpResponse = await sut.execute('anyEmail@email.com.br', 'anyPassword')
+    expect(httpResponse).toBe(null)
+  })
 })
