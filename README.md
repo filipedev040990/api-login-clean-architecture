@@ -2,7 +2,9 @@
 API simples de login para aplicação dos conceitos de arquitetura limpa.
 
 ## Testando a API
-Para testar, basta clonar o projeto e instalar as dependências e em seguida utilizar a rota localhost:3000/api/authenticate
+* Clone o projeto
+* Altere as variáveis do arquivo src/infra/config.ts
+* Acesse http://localhost:3000/api/authenticate (aqui você informa a porta configurada no passo anterior)
 ### Método: POST
 
 `{
