@@ -2,20 +2,23 @@ import { IGetUserByEmailRepository } from '../../interfaces/repositories/get-use
 import { IAuthenticateUseCase } from '../../interfaces/usecases/authenticate-usecase-interface'
 import { AuthenticateUseCase } from './authenticate-usecase'
 import { UserEntity } from '../entities/user-entity'
+import { IHashCompare } from '../../interfaces/criptography/hash-compare-interface'
 
 interface ISut {
   sut: IAuthenticateUseCase
   getUserByEmailRepositoryStub: IGetUserByEmailRepository
+  hashCompareStub: IHashCompare
 }
 
 const makeSut = (): ISut => {
   const getUserByEmailRepositoryStub = makeGetUserByEmailRepositoryStub()
-  const sut = new AuthenticateUseCase(getUserByEmailRepositoryStub)
+  const hashCompareStub = makeHashCompareStub()
+  const sut = new AuthenticateUseCase(getUserByEmailRepositoryStub, hashCompareStub)
 
-  return { sut, getUserByEmailRepositoryStub }
+  return { sut, getUserByEmailRepositoryStub, hashCompareStub }
 }
 
-export const makeGetUserByEmailRepositoryStub = (): IGetUserByEmailRepository => {
+const makeGetUserByEmailRepositoryStub = (): IGetUserByEmailRepository => {
   class GetUserByEmailRepositoryStub implements IGetUserByEmailRepository {
     async execute (email: string): Promise<UserEntity> {
       const user = {
@@ -28,6 +31,15 @@ export const makeGetUserByEmailRepositoryStub = (): IGetUserByEmailRepository =>
     }
   }
   return new GetUserByEmailRepositoryStub()
+}
+
+const makeHashCompareStub = (): IHashCompare => {
+  class HashCompare implements IHashCompare {
+    async execute (value: string, hash: string): Promise<boolean> {
+      return await new Promise(resolve => resolve(true))
+    }
+  }
+  return new HashCompare()
 }
 
 describe('AuthenticateUseCase', () => {
@@ -45,5 +57,13 @@ describe('AuthenticateUseCase', () => {
 
     const httpResponse = await sut.execute('anyEmail@email.com.br', 'anyPassword')
     expect(httpResponse).toBe(null)
+  })
+
+  test('should call HashCompare with correct values', async () => {
+    const { sut, hashCompareStub } = makeSut()
+    const hashCompareSpy = jest.spyOn(hashCompareStub, 'execute')
+
+    await sut.execute('anyEmail@email.com.br', 'anyPassword')
+    expect(hashCompareSpy).toHaveBeenCalledWith('anyPassword', 'hashedPassword')
   })
 })
