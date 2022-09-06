@@ -17,8 +17,14 @@ Esta API usa para testes um repositório In Memory localizado em src/infra/db/re
 
 ## Comandos úteis
 `npm run start` => inicia a aplicação
+
+
 `npm run test:verbose` => Executa testes exibindo todas as informações
+
+
 `npm run test:unit` => Executa somente testes unitários que estão em desenvolvimento
+
+
 `npm run test:ci` => Executa todos os testes e faz a análise de cobertura de testes
 
 ## Princípios aplicados
