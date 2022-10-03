@@ -17,7 +17,7 @@ const makeSut = (): SutTypes => {
 const makeEmailValidatorStub = (): IEmailValidator => {
   class EmailValidatorStub implements IEmailValidator {
     async isValid (email: string): Promise<boolean> {
-      return await new Promise(resolve => resolve(true))
+      return await Promise.resolve(true)
     }
   }
   return new EmailValidatorStub()
@@ -26,7 +26,7 @@ const makeEmailValidatorStub = (): IEmailValidator => {
 const makeAuthenticateUseCaseStub = (): IAuthenticateUseCase => {
   class AuthenticateUseCaseStub implements IAuthenticateUseCase {
     async execute (email: string, password: string): Promise<string> {
-      return await new Promise(resolve => resolve('anyToken'))
+      return await Promise.resolve('anyToken')
     }
   }
   return new AuthenticateUseCaseStub()
@@ -68,7 +68,7 @@ describe('AuthenticateController', () => {
     const { sut, emailValidatorStub } = makeSut()
     const httpRequest = makeHttpRequest()
 
-    jest.spyOn(emailValidatorStub, 'isValid').mockReturnValueOnce(new Promise(resolve => resolve(false)))
+    jest.spyOn(emailValidatorStub, 'isValid').mockReturnValueOnce(Promise.resolve(false))
 
     const httpResponse = await sut.execute(httpRequest)
     expect(httpResponse).toEqual({

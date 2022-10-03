@@ -3,7 +3,7 @@ import bcrypt from 'bcrypt'
 
 jest.mock('bcrypt', () => ({
   async compare (value: string, hash: string): Promise<boolean> {
-    return await new Promise(resolve => resolve(true))
+    return await Promise.resolve(true)
   }
 }))
 

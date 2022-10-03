@@ -4,7 +4,7 @@ import config from '../../infra/config'
 
 jest.mock('jsonwebtoken', () => ({
   async sign (): Promise<string> {
-    return await new Promise(resolve => resolve('anyToken'))
+    return await Promise.resolve('anyToken')
   }
 }))
 

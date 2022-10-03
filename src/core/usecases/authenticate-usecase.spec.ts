@@ -24,7 +24,7 @@ const makeSut = (): ISut => {
 const makeHashCompareStub = (): IHashCompare => {
   class HashCompare implements IHashCompare {
     async compare (value: string, hash: string): Promise<boolean> {
-      return await new Promise(resolve => resolve(true))
+      return await Promise.resolve(true)
     }
   }
   return new HashCompare()
@@ -33,7 +33,7 @@ const makeHashCompareStub = (): IHashCompare => {
 const makeTokenGeneratorStub = (): ITokenGenerator => {
   class TokenGeneratorStub implements ITokenGenerator {
     async execute (value: any): Promise<string> {
-      return await new Promise(resolve => resolve('anyToken'))
+      return await Promise.resolve('anyToken')
     }
   }
   return new TokenGeneratorStub()
@@ -66,7 +66,7 @@ describe('AuthenticateUseCase', () => {
 
   test('should return null if HashCompare return false', async () => {
     const { sut, hashCompareStub } = makeSut()
-    jest.spyOn(hashCompareStub, 'compare').mockReturnValueOnce(new Promise(resolve => resolve(false)))
+    jest.spyOn(hashCompareStub, 'compare').mockReturnValueOnce(Promise.resolve(false))
 
     const httpResponse = await sut.execute('anyEmail@email.com', 'anyPassword')
     expect(httpResponse).toBe(null)
