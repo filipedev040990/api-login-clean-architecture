@@ -1,19 +1,19 @@
-import { IGetUserByEmailRepository } from '../../interfaces/repositories/get-user-by-email-repository-interface'
+import { IUserRepository } from '../../interfaces/repositories/user-repository-interface'
 import { IAuthenticateUseCase } from '../../interfaces/usecases/authenticate-usecase-interface'
 import { AuthenticateUseCase } from './authenticate-usecase'
 import { IHashCompare } from '../../interfaces/criptography/hash-compare-interface'
 import { ITokenGenerator } from '../../interfaces/token/token-generator-interface'
-import { GetUserByEmailRepositoryInMemory } from '../../infra/db/repositories/get-user-by-email-in-memory-repository'
+import { UserRepositoryInMemory } from '../../infra/db/repositories/user-in-memory-repository'
 
 interface ISut {
   sut: IAuthenticateUseCase
-  getUserByEmailRepositoryStub: IGetUserByEmailRepository
+  getUserByEmailRepositoryStub: IUserRepository
   hashCompareStub: IHashCompare
   tokenGeneratorStub: ITokenGenerator
 }
 
 const makeSut = (): ISut => {
-  const getUserByEmailRepositoryStub = new GetUserByEmailRepositoryInMemory()
+  const getUserByEmailRepositoryStub = new UserRepositoryInMemory()
   const hashCompareStub = makeHashCompareStub()
   const tokenGeneratorStub = makeTokenGeneratorStub()
   const sut = new AuthenticateUseCase(getUserByEmailRepositoryStub, hashCompareStub, tokenGeneratorStub)
@@ -42,7 +42,7 @@ const makeTokenGeneratorStub = (): ITokenGenerator => {
 describe('AuthenticateUseCase', () => {
   test('should call getUserByEmailRepository with correct email', async () => {
     const { sut, getUserByEmailRepositoryStub } = makeSut()
-    const repoSpy = jest.spyOn(getUserByEmailRepositoryStub, 'execute')
+    const repoSpy = jest.spyOn(getUserByEmailRepositoryStub, 'getUserByEmail')
 
     await sut.execute('anyEmail@email.com', 'anyPassword')
     expect(repoSpy).toHaveBeenCalledWith('anyEmail@email.com')
@@ -50,7 +50,7 @@ describe('AuthenticateUseCase', () => {
 
   test('should return null if getUserByEmailRepository return null', async () => {
     const { sut, getUserByEmailRepositoryStub } = makeSut()
-    jest.spyOn(getUserByEmailRepositoryStub, 'execute').mockReturnValueOnce(null)
+    jest.spyOn(getUserByEmailRepositoryStub, 'getUserByEmail').mockReturnValueOnce(null)
 
     const httpResponse = await sut.execute('anyEmail@email.com', 'anyPassword')
     expect(httpResponse).toBe(null)
